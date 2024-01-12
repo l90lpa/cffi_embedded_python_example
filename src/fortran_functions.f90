@@ -59,7 +59,7 @@ module fortran_functions_mod
         allocate(state%v(nmx, nmy))
         allocate(state%h(nmx, nmy))
 
-        call init_tsunami_pulse_initial_condition_impl(geom, nmx, nmx, state%u, state%v, state%h)
+        call init_tsunami_pulse_initial_condition_impl(geom, nmx, nmy, state%u, state%v, state%h)
     end subroutine init_tsunami_pulse_initial_condition
 
     subroutine step_model(geom, state)
@@ -79,7 +79,7 @@ module fortran_functions_mod
 
         print *, "nmx=", nmx, "nmy=", nmy
 
-        call step_model_impl(geom, nmx, nmx, state%u, state%v, state%h)
+        call step_model_impl(geom, nmx, nmy, state%u, state%v, state%h)
     end subroutine step_model
 
 end module fortran_functions_mod
