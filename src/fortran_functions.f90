@@ -55,8 +55,6 @@ module fortran_functions_mod
                geom%local_domain%grid_extent%y + &
                geom%local_domain%halo_depth%north + geom%local_domain%ghost_depth%north)
 
-        print *, "nmx=", nmx, "nmy=", nmy
-
         allocate(state%u(nmx, nmy))
         allocate(state%v(nmx, nmy))
         allocate(state%h(nmx, nmy))
@@ -74,8 +72,6 @@ module fortran_functions_mod
 
         nmx = size(state%u, 1)
         nmy = size(state%u, 2)
-
-        print *, "nmx=", nmx, "nmy=", nmy
 
         call step_model_impl(geom, nmx, nmy, state%u, state%v, state%h, comm, root)
     end subroutine step_model

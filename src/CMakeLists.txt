@@ -11,6 +11,7 @@ add_custom_command(
     OUTPUT "lib${plugin_name}.so"
     COMMAND python ${plugin_generator_script} ${plugin_name} ${plugin_build_dir} ${plugin_header_file} ${plugin_module_file}
     COMMENT "Generating python plugin"
+    DEPENDS ${plugin_header_file} ${plugin_module_file}
 )
 
 # Create a custom target that depends on the custom command
