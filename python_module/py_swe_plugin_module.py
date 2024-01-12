@@ -87,8 +87,8 @@ def from_py_geometry(py_geom, geom_ptr):
     geom_ptr.local_domain.ghost_depth.west  = py_geom.local_domain.ghost_depth.west
 
 @ffi.def_extern()
-def init_geometry(nx, ny, xmax, ymax, geom_ptr):
-    py_geom = create_geometry(MPI.Comm.py2f(MPI.COMM_WORLD), nx, ny, xmax, ymax)
+def init_geometry(comm_int, nx, ny, xmax, ymax, geom_ptr):
+    py_geom = create_geometry(comm_int, nx, ny, xmax, ymax)
     from_py_geometry(py_geom, geom_ptr)
 
 def create_geometry(comm_int, nx, ny, xmax, ymax):
@@ -123,10 +123,11 @@ def copy_to_buffer(ptr, array: np.ndarray):
 @ffi.def_extern()
 def init_tsunami_pulse_initial_condition_impl(geom_ptr, nmx, nmy, u_ptr, v_ptr, h_ptr):
     py_geom = to_py_geometry(geom_ptr)
+    shape = (nmx, nmy)
     new_state = create_tsunami_pulse_initial_condition(py_geom)
-    u = as_ndarray(u_ptr, (nmx, nmy))
-    v = as_ndarray(v_ptr, (nmx, nmy))
-    h = as_ndarray(h_ptr, (nmx, nmy))
+    u = as_ndarray(u_ptr, shape)
+    v = as_ndarray(v_ptr, shape)
+    h = as_ndarray(h_ptr, shape)
     u[...] = new_state.u[...]
     v[...] = new_state.v[...]
     h[...] = new_state.h[...]
@@ -210,14 +211,13 @@ def save_global_state_domain_on_root(s, geometry: ParGeometry, mpi4py_comm, root
         print(msg)
 
 @ffi.def_extern()
-def step_model_impl(geom_ptr, nmx, nmy, u_ptr, v_ptr, h_ptr):
-    u = as_ndarray(u_ptr, (nmx, nmy))
-    v = as_ndarray(v_ptr, (nmx, nmy))
-    h = as_ndarray(h_ptr, (nmx, nmy))
+def step_model_impl(geom_ptr, nmx, nmy, u_ptr, v_ptr, h_ptr, comm_int, root):
     py_geom = to_py_geometry(geom_ptr)
+    shape = (nmx, nmy)
+    u = as_ndarray(u_ptr, shape)
+    v = as_ndarray(v_ptr, shape)
+    h = as_ndarray(h_ptr, shape)
     py_s0 = State(u, v, h)
-    comm_int = MPI.Comm.py2f(MPI.COMM_WORLD)
-    root = 0
     step_model(py_geom, py_s0, comm_int, root)
 
 def step_model(geometry: ParGeometry, s0: State, comm_int, root):

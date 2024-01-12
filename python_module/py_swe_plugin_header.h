@@ -33,8 +33,8 @@ struct ParGeometry_c {
     } local_domain;
 };
 
-extern void init_geometry(int, int, double, double, struct ParGeometry_c*);
+extern void init_geometry(int, int, int, double, double, struct ParGeometry_c*);
 
 extern void init_tsunami_pulse_initial_condition_impl(struct ParGeometry_c*, int, int, double*, double*, double*);
 
-extern void step_model_impl(struct ParGeometry_c*, int, int, double*, double*, double*);
+extern void step_model_impl(struct ParGeometry_c*, int, int, double*, double*, double*, int, int);
