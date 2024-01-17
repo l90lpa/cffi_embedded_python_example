@@ -17,10 +17,12 @@ The Python dependenices are listed in `requirements.txt` (this project has been 
 
 ## Build
 
+Python CFFI is used to generate a shared library that contains the Python interpreter, and has a API that matches that specification dictated by `py_swe_plugin_module.py` through the use of the decarators `@ffi.def_extern()`. To work, the generation process also requires a C header to be provided that matches the specificed interface. As a result of the process, C source code for the plugin is generated. Therefore, we can either choose to link against that shared library, thus embedding the interpreter dynamically, or build the source code of the library into our app and hence embed the interpreter statically. This choice is expressed through the CMake option `LINK_PYTHON_DYNAMICALLY` (which defaults to true). 
+
 ### CMake configure
 - `mkdir build`
 - `cd build`
-- `cmake ../src`
+- `cmake .. -DLINK_PYTHON_DYNAMICALLY=[true|false]`
 
 ### Cmake build
 - `cmake --build .`
